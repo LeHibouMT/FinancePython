@@ -1,11 +1,16 @@
 from fastapi import FastAPI
-from app.routes import items_router
-from .database import init_db
+from contextlib import asynccontextmanager
+from .database import database
+from . import routes as routes
 
-app = FastAPI()
 
-app.include_router(items_router)
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await database.init_db()
+    yield
 
-@app.on_event("startup")
-async def startup_event():
-    await init_db()
+
+app = FastAPI(lifespan=lifespan)
+
+app.include_router(routes.items_router, prefix="/items", tags=["Items"])
+app.include_router(routes.assets_stocks_router, prefix="/stocks", tags=["Stocks"])

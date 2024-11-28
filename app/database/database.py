@@ -2,11 +2,7 @@ import os
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-import asyncio
-from dotenv import load_dotenv
 from sqlalchemy.exc import SQLAlchemyError
-
-load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
@@ -23,7 +19,6 @@ AsyncSessionLocal = sessionmaker(
 
 Base = declarative_base()
 
-from .models import Item
 
 async def init_db():
     try:
